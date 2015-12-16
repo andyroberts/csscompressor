@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
   compile 'net.sf:jargs:1.0'
+  testCompile 'junit:junit:4.11'
 }
 
 compileJava {
