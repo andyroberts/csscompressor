@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+  maven {
+      url 'https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/'
+  }
+}
+
+dependencies {
+  compile 'net.sf:jargs:1.0'
+  testCompile 'junit:junit:4.11'
+}
+
+compileJava {
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+  options.compilerArgs = ['-Xlint:all']
+}

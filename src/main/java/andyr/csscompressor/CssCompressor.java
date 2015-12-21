@@ -71,8 +71,8 @@ public class CssCompressor {
     
     protected String mergeRules(String inputCss) {
 
-        Map ruleMap = new HashMap();
-        StringBuffer mergedCss = new StringBuffer();
+        Map<String, String> ruleMap = new HashMap<String, String>();
+        StringBuilder mergedCss = new StringBuilder();
 
         Pattern p = Pattern.compile("([^\\{]*)\\{(.*?)\\}");
         Matcher m = p.matcher(inputCss);
@@ -84,17 +84,15 @@ public class CssCompressor {
             rules = compressDimensions(rules);
 
             if (ruleMap.containsKey(rules)) {
-                ruleMap.put(rules, ruleMap.get(rules) + "," + selectors);
+                ruleMap.put(rules, ruleMap.get(rules) + ',' + selectors);
             }
             else {
                 ruleMap.put(rules, selectors);
             }
         }
 
-        String rule;
-        for (Iterator i = ruleMap.keySet().iterator(); i.hasNext();) {
-            rule = (String)i.next();
-            mergedCss.append(ruleMap.get(rule)+"{"+rule+"}");
+        for (String rule : ruleMap.keySet()) {
+            mergedCss.append(ruleMap.get(rule)).append('{').append(rule).append('}');
         }
 
         return mergedCss.toString();
@@ -102,12 +100,12 @@ public class CssCompressor {
 
     protected String removeDuplicateProperties(String inputCssRule) {
 
-        StringBuffer cssRule = new StringBuffer();
+        StringBuilder cssRule = new StringBuilder();
 
-        Set ruleSet = new HashSet(Arrays.asList(inputCssRule.split(";")));
+        Set<String> ruleSet = new HashSet<String>(Arrays.asList(inputCssRule.split(";")));
 
-        for (Iterator i = ruleSet.iterator(); i.hasNext();) {
-            cssRule.append((String)i.next() + ";");
+        for (String aRuleSet : ruleSet) {
+            cssRule.append(aRuleSet).append(";");
         }
 
         return cssRule.toString();
@@ -117,7 +115,7 @@ public class CssCompressor {
         Pattern p = Pattern.compile("(border|margin):(\\d+(?:\\p{Alpha}*))(\\2){3}");
         Matcher m;
 
-        StringBuffer cssRule = new StringBuffer();
+        StringBuilder cssRule = new StringBuilder();
 
         for (String rule: inputCssRule.split(";")) {
             
@@ -125,10 +123,10 @@ public class CssCompressor {
             m = p.matcher(condensedRule);
             if (m.find()) {
                 cssRule.append(condensedRule.substring(0, m.start()));
-                cssRule.append(m.group(1) + ':' + m.group(2) + ';');
+                cssRule.append(m.group(1)).append(':').append(m.group(2)).append(';');
             }
             else {
-                cssRule.append(rule + ';');
+                cssRule.append(rule).append(';');
             }
         }
 
@@ -223,9 +221,9 @@ public class CssCompressor {
         sb = new StringBuffer();
         while (m.find()) {
             String[] rgbcolors = m.group(1).split(",");
-            StringBuffer hexcolor = new StringBuffer("#");
-            for (int i = 0; i < rgbcolors.length; i++) {
-                int val = Integer.parseInt(rgbcolors[i]);
+            StringBuilder hexcolor = new StringBuilder("#");
+            for (String rgbcolor : rgbcolors) {
+                int val = Integer.parseInt(rgbcolor);
                 if (val < 16) {
                     hexcolor.append("0");
                 }
@@ -246,7 +244,7 @@ public class CssCompressor {
         m = p.matcher(css);
         sb = new StringBuffer();
 
-        Map colorMap = new HashMap();
+        Map<String, String> colorMap = new HashMap<String, String>();
         colorMap.put("C0C0C0", "silver");
         colorMap.put("800000", "maroon");
         colorMap.put("800080", "purple");
